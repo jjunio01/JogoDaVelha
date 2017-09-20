@@ -1,7 +1,7 @@
 jogador = {}
 
 
-function jogador:novo()
+function jogador:inicializar()
 
 
 	novoJogador = {nome = "", jogada = ""}
@@ -12,7 +12,6 @@ function jogador:novo()
 
 end
 
-return jogador:novo()
-
+return jogador
 
 
