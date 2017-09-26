@@ -15,9 +15,8 @@ novoTabuleiro = setmetatable(novoTabuleiro, {__index = tabuleiro})
 			novoTabuleiro[linha][coluna] = " "
 
 		end
+
 	end
-
-
 
 	return novoTabuleiro
 
@@ -36,10 +35,11 @@ function tabuleiro:visualizar()
 			else
 				aux = aux .. self[linha][coluna]
 			end
-
 		end
-		print("----------")
 		print(aux)
+		if linha < 3 then
+			print("----------")
+		end
 
 	end
 
