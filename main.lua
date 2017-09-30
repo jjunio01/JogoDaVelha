@@ -17,9 +17,9 @@ function jogoDaVelha()
 	print("Jogador 'X' escreva seu nome: ")
 	jogo.jogador2.nome = io.read()
 
-	local venceu = false
+	local termino = false
 
-	while venceu == false do
+	while termino == false do
 
 		if controlador %2 == 0 then
 
@@ -36,10 +36,11 @@ function jogoDaVelha()
 		print("Jogador " .. "'" .. jogadorDaVez.jogada .. "'")
 		print("Escolha a posição de sua jogada:")
 		print("Escolha a linha: ")
-		local linha = io.read("*number")
+		local linha = io.read()
 		print("Escolha a coluna: ")
-		local coluna = io.read("*number")
-
+		local coluna = io.read()
+		coluna = tonumber(coluna)
+		linha = tonumber(linha)
 
 		jogada = jogo:novaJogada(linha, coluna, jogadorDaVez)
 
@@ -55,21 +56,20 @@ function jogoDaVelha()
 
 		controlador = controlador + 1
 
-		venceu = jogo:vencedor()
+		termino = jogo:vencedor()
 
 	end
 
-	if venceu then
+	if termino[2] == 1 then
 		print("Jogador " .. "'" .. jogadorDaVez.jogada .. "'" .. " venceu.")
 		print("=== PARABÉNS ".. jogadorDaVez.nome .. " =====")
 		jogo.tabuleiro:visualizar()
 
 	end
 
-	if venceu == false then
+	if termino[2] == 2 then
 
 		print("=== Jogo Empatado  ===")
-		jogo.tabuleiro:visualizar()
 
 	end
 
