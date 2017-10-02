@@ -88,7 +88,7 @@ end
 
 
 
-function jogo:vencedor()
+function jogo:termino()
 
 
 	if jogo:empate() then

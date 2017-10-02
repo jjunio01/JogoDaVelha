@@ -56,7 +56,7 @@ function jogoDaVelha()
 
 		controlador = controlador + 1
 
-		termino = jogo:vencedor()
+		termino = jogo:termino()
 
 	end
 

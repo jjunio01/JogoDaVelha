@@ -51,15 +51,10 @@ function testVencedor()
 	local jogo = novoJogo:novo()
 	jogo.tabuleiro[1][1] = "X"	jogo.tabuleiro[1][2] = "X"	jogo.tabuleiro[1][3] = "X"
 
-	luaunit.assertEquals(jogo:vencedor(), true)
+	luaunit.assertEquals(jogo:vencedor()[1], true)
 
 end
 
-function testPreencerTabuleiro()
-
-
-
-end
 
 os.exit( luaunit.LuaUnit.run() )
 
