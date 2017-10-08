@@ -2,9 +2,9 @@ tabuleiro = {}
 
 function tabuleiro:inicializar()
 
-novoTabuleiro = {}
+	novoTabuleiro = {}
 
-novoTabuleiro = setmetatable(novoTabuleiro, {__index = tabuleiro})
+	novoTabuleiro = setmetatable(novoTabuleiro, {__index = tabuleiro})
 
 	for linha = 1, 3 do
 
@@ -43,6 +43,20 @@ function tabuleiro:visualizar()
 
 	end
 
+end
+
+function tabuleiro:zerar()
+
+	for linha = 1, 3 do
+
+		self[linha] = {}
+
+		for coluna = 1, 3 do
+
+			self[linha][coluna] = " "
+
+		end
+	end
 end
 
 return tabuleiro

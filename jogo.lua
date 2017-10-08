@@ -14,53 +14,46 @@ function jogo:novo()
 	novoJogo.jogador2 = novoJogador:inicializar()
 	novoJogo.tabuleiro = novoTabuleiro:inicializar()
 
-
 	return novoJogo
 
 end
 
 
 function jogo:posicaoValida(linha, coluna)
-	print(linha)
-	print(coluna)
-	if linha >= 1 and linha <= 3 and coluna >= 1 and coluna <=3 then
+
+	if self:valoresValidos(linha, coluna) then
 
 		if self.tabuleiro[linha][coluna] == " " then
 
-			return true
+			return {true}
+
+		else
+
+			return {false,1}
 
 		end
-
-		print("#### Posição já jogada ####")
-
-		return false
-
+	else
+		return {false}
 	end
-
-	print("#### Posição inválida ####")
-
-	return false
-
 end
 
 
 function jogo:novaJogada(linha, coluna, jogador)
 
 
-	if jogo:posicaoValida(linha, coluna) then
+	if self:posicaoValida(linha, coluna)[1] then
 
 		self.tabuleiro[linha][coluna] = jogador.jogada
 
-		return true
-
+		return {true}
 	end
 
-	return false
+	return self:posicaoValida(linha, coluna)
 
 end
 
 
-function jogo:empate()
+function jogo:tabuleiroPreenchido()
 
 local contador = 10
 
@@ -87,15 +80,25 @@ local contador = 10
 end
 
 
+function jogo:valoresValidos(linha, coluna)
+
+	if linha == 1 or linha == 2 or linha == 3 then
+
+		if coluna == 1 or coluna == 2 or coluna == 3 then
+
+			return true
+
+		end
+
+		return false
+	end
+
+	return false
+end
+
 
 function jogo:termino()
 
-
-	if jogo:empate() then
-
-		return {true, 2}
-
-	else
 
 	--Verificar vencedor nas colunas
 	for coluna = 1, 3 do
@@ -145,8 +148,13 @@ function jogo:termino()
 
 	end
 
+	if jogo:tabuleiroPreenchido() then
 
-	return false
+		return {true, 2}
+
+	else
+
+	return {false}
 
 	end
 

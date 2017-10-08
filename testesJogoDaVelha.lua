@@ -1,60 +1,186 @@
 luaunit = require("luaunit")
-novoTabuleiro = require("tabuleiro")
-novoJogo = require("jogo")
-novoJogador = require("jogador")
+jogoTeste = require("jogo")
 
+function testPosicaoValida()
 
-
-function testRealizarJogadaValida()
-
-	jogo = novoJogo:novo()
-	luaunit.assertEquals(jogo.tabuleiro[2][3] == " ", true)
-	jogador = novoJogador:inicializar()
-	jogador.jogada = "X"
-	testeJogada = jogo:novaJogada(2,3, jogador)
-	luaunit.assertEquals(testeJogada, true)
-	luaunit.assertEquals(jogo.tabuleiro[2][3] == "X", true)
+	local jogo = jogoTeste:novo()
+	luaunit.assertEquals(jogo:posicaoValida(2,3)[1], true)
 
 end
 
-function testRealizarJogadaInvalida()
+function testPosicaoInvalida()
 
-	local jogo = novoJogo:novo()
-	local jogador = novoJogador:inicializar()
-	jogador.jogada = "O"
-	testeJogada = jogo:novaJogada(4,3, jogador)
-	luaunit.assertEquals(testeJogada, false)
+	local jogo = jogoTeste:novo()
+	luaunit.assertEquals(jogo:posicaoValida(2,5)[1], false)
 
 end
 
-function testVisualizarTabuleiro()
+function testJogadaValida()
 
-	local jogo = novoJogo:novo()
-	luaunit.assertEquals(jogo.tabuleiro[1][1] == " ", true)
-	jogo.tabuleiro:visualizar()
+	local jogo = jogoTeste:novo()
+	local jogadorDaVez = jogo.jogador1
+	jogo.jogador1.jogada = "X"
+	luaunit.assertEquals(jogo:novaJogada(3,2,jogadorDaVez)[1], true)
+
+end
+
+function testJogadaInvalidaJaJogada()
+
+	local jogo = jogoTeste:novo()
+	local jogadorDaVez = jogo.jogador1
+	jogo.jogador1.jogada = "O"
+	jogo:novaJogada(3,3,jogadorDaVez)
+	luaunit.assertEquals(jogo:novaJogada(3,3,jogadorDaVez)[1], false)
+
+end
+
+function testJogadaInvalidaValoreNaoNumerico()
+
+	local jogo = jogoTeste:novo()
+	local jogadorDaVez = jogo.jogador1
+	jogo.jogador1.jogada = "O"
+	luaunit.assertEquals(jogo:novaJogada("a",3,jogadorDaVez)[1], false)
+
+end
+
+function testJogadaInvalida()
+
+	local jogo = jogoTeste:novo()
+	local jogadorDaVez = jogo.jogador1
+	jogo.jogador1.jogada = "O"
+	luaunit.assertEquals(jogo:novaJogada(4,3,jogadorDaVez)[1], false)
 
 end
 
 function testEmpate()
 
-	local jogo = novoJogo:novo()
-	jogo.tabuleiro[1][1] = "X"	jogo.tabuleiro[1][2] = "O"	jogo.tabuleiro[1][3] = "X"
-	jogo.tabuleiro[2][1] = "X"	jogo.tabuleiro[2][2] = "X"	jogo.tabuleiro[2][3] = "O"
-	jogo.tabuleiro[3][1] = "O" 	jogo.tabuleiro[3][2] = "x"	jogo.tabuleiro[3][3] = "O"
-	luaunit.assertEquals(jogo:empate(), true)
+	jogo = jogoTeste:novo()
+	jogo.jogador1.jogada = "X"
+	jogo.jogador2.jogada = "O"
+	jogo:novaJogada(1,1,jogo.jogador1) 	jogo:novaJogada(1,2,jogo.jogador2) jogo:novaJogada(1,3,jogo.jogador1)
+	jogo:novaJogada(2,1,jogo.jogador1) 	jogo:novaJogada(2,2,jogo.jogador1) jogo:novaJogada(2,3,jogo.jogador2)
+	jogo:novaJogada(3,1,jogo.jogador2) 	jogo:novaJogada(3,2,jogo.jogador1)	jogo:novaJogada(3,3,jogo.jogador2)
+	luaunit.assertEquals(jogo:termino()[2] == 2, true)
+
+	--[[
+
+		X |	O | X
+		X |	X | O
+		O | X | O
+
+	--]]
 
 
 end
 
-function testVencedor()
+function testVencedorLinhaUm()
 
-	local jogo = novoJogo:novo()
-	jogo.tabuleiro[1][1] = "X"	jogo.tabuleiro[1][2] = "X"	jogo.tabuleiro[1][3] = "X"
-
-	luaunit.assertEquals(jogo:vencedor()[1], true)
+	local jogo = jogoTeste:novo()
+	jogo.jogador1.jogada = "X"
+	jogo:novaJogada(1,1,jogo.jogador1)	jogo:novaJogada(1,2,jogo.jogador1)	jogo:novaJogada(1,3,jogo.jogador1)
+	luaunit.assertEquals(jogo:termino()[1], true)
 
 end
 
+function testVencedorLinhaDois()
+
+	local jogo = jogoTeste:novo()
+	jogo.jogador1.jogada = "O"
+	jogo:novaJogada(2,1,jogo.jogador1)	jogo:novaJogada(2,2,jogo.jogador1)	jogo:novaJogada(2,3,jogo.jogador1)
+	luaunit.assertEquals(jogo:termino()[1], true)
+
+end
+
+function testVencedorLinhaTres()
+
+	local jogo = jogoTeste:novo()
+	jogo.jogador1.jogada = "X"
+	jogo.jogador2.jogada = "O"
+	jogo:novaJogada(3,1,jogo.jogador1)	jogo:novaJogada(3,2,jogo.jogador1)	jogo:novaJogada(3,3,jogo.jogador1)
+	luaunit.assertEquals(jogo:termino()[1], true)
+
+end
+
+function testVencedorColunaUm()
+
+	local jogo = jogoTeste:novo()
+	jogo.jogador1.jogada = "X"
+	jogo:novaJogada(1,1,jogo.jogador1)	jogo:novaJogada(2,1,jogo.jogador1)	jogo:novaJogada(3,1,jogo.jogador1)
+	luaunit.assertEquals(jogo:termino()[1], true)
+
+end
+
+
+function testVencedorColunaDois()
+
+	local jogo = jogoTeste:novo()
+	jogo.jogador1.jogada = "O"
+	jogo:novaJogada(1,2,jogo.jogador1)	jogo:novaJogada(2,2,jogo.jogador1)	jogo:novaJogada(3,2,jogo.jogador1)
+	luaunit.assertEquals(jogo:termino()[1], true)
+
+end
+
+function testVencedorColunaTres()
+
+	local jogo = jogoTeste:novo()
+	jogo.jogador1.jogada = "X"
+	jogo:novaJogada(1,3,jogo.jogador1)	jogo:novaJogada(2,3,jogo.jogador1)	jogo:novaJogada(3,3,jogo.jogador1)
+	luaunit.assertEquals(jogo:termino()[1], true)
+
+end
+
+function testVencedorDiagonalPrincipal()
+
+	local jogo = jogoTeste:novo()
+	jogo.jogador1.jogada = "O"
+	jogo:novaJogada(1,1,jogo.jogador1)	jogo:novaJogada(2,2,jogo.jogador1)	jogo:novaJogada(3,3,jogo.jogador1)
+	luaunit.assertEquals(jogo:termino()[1], true)
+
+end
+
+function testVencedorColunaTres()
+
+	local jogo = jogoTeste:novo()
+	jogo.jogador1.jogada = "X"
+	jogo:novaJogada(1,3,jogo.jogador1)	jogo:novaJogada(2,2,jogo.jogador1)	jogo:novaJogada(3,1,jogo.jogador1)
+	luaunit.assertEquals(jogo:termino()[1], true)
+
+end
+
+function testValoresValidos()
+
+	local jogo = jogoTeste:novo()
+	luaunit.assertTrue(jogo:valoresValidos(2,1))
+
+end
+
+function testValoresInalidosNumericos()
+
+	local jogo = jogoTeste:novo()
+	luaunit.assertEquals(jogo:valoresValidos(2,9), false)
+
+end
+
+function testValoresInalidosLinhaNaoNumerica()
+
+	local jogo = jogoTeste:novo()
+	luaunit.assertEquals(jogo:valoresValidos("A",9), false)
+
+end
+
+function testValoresInalidosColunaNaoNumerica()
+
+	local jogo = jogoTeste:novo()
+	luaunit.assertEquals(jogo:valoresValidos(1,"s"), false)
+
+end
+
+function testValoresInalidosNaoNumericos()
+
+	local jogo = jogoTeste:novo()
+	luaunit.assertEquals(jogo:valoresValidos("A","v"), false)
+
+end
 
 os.exit( luaunit.LuaUnit.run() )
 
